@@ -1,0 +1,97 @@
+---
+name: Create Pull Request For New Tfvars
+on:
+    workflow_dispatch:
+        inputs:
+            image_tag_api:
+                required: true
+                type: string
+            image_tag_app:
+                required: true
+                type: string
+            image_tag_e2e:
+                required: true
+                type: string
+            image_tag_smoketest:
+                required: true
+                type: string
+            force_redeploy_api:
+                required: true
+                type: string
+            force_redeploy_app:
+                required: true
+                type: string
+env:
+    BASE_BRANCH: ashay/main-copy-to-test
+
+jobs:
+    tf_wrapper:
+        permissions:
+          contents: write
+          pull-requests: write
+        name: Run Wrapper Before TF Deploy
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Set a branch name
+          id: get_branch_name
+          run: |
+            echo BRANCH_NAME=ee-botuser/image-file-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }} >> $GITHUB_OUTPUT
+
+        - name: Create a new branch
+          id: git_branch_new
+          run: |
+              git switch -c ${{ steps.get_branch_name.outputs.BRANCH_NAME }}
+
+        - name: Render image TF file from template
+          id: render_template
+          uses: chuhlomin/render-template@v1
+          with:
+            template: actions/tmpl/bbb-image-tags.tmpl
+            vars: |
+              image_tag_api: ${{ inputs.image_tag_api }}
+              image_tag_app: ${{ inputs.image_tag_app }}
+              image_tag_e2e: ${{ inputs.image_tag_e2e }}
+              image_tag_smoketest: ${{ inputs.image_tag_smoketest }}
+              force_redeploy_api: ${{ inputs.force_redeploy_api }}
+              force_redeploy_app: ${{ inputs.force_redeploy_app }}
+        
+        - name: Create High Priority TF File
+          timeout-minutes: 3
+          run: |
+            rm -f actions/bbb-image-tags.auto.tfvars
+            echo '${{ steps.render_template.outputs.result }}' > actions/bbb-image-tags.auto.tfvars
+                      
+        - name: Copy Customer Env tfvars file if exist
+          run: |
+            echo "Copying auto.tfvars with image tags"
+            if [ -f actions/bbb-image-tags.auto.tfvars ]; then
+                cat actions/bbb-image-tags.auto.tfvars
+                cp -av actions/bbb-image-tags.auto.tfvars terraform/aws-eks/peripheral/
+                cp -av actions/bbb-image-tags.auto.tfvars terraform/az-aks/peripheral/
+            fi
+
+        - name: Commit changes to branch
+          run: |
+            git config --global user.name "EE Actions Bot"
+            git config --global user.email "james@svix.com"
+            CURR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            git add .
+            git commit -m 'Auto: Sets new image id tags; Reference: RunId: ${{ github.run_id }} RunNumber: ${{ github.run_number }} RunAttempt: ${{ github.run_attempt }}'
+            git push origin $CURR_BRANCH
+
+        - name: create pull request
+          id: gh_pr_url
+          run: |
+            echo GH_PR_URL=$(gh pr create -B ${{ env.BASE_BRANCH }} -H ${{ steps.get_branch_name.outputs.BRANCH_NAME }} --title 'Auto: Merge ${{ steps.get_branch_name.outputs.BRANCH_NAME }} into ${{ env.BASE_BRANCH }}' --body 'Created by Github action') >> $GITHUB_OUTPUT
+          env:
+            GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
+
+        # - name: Merge PR request
+        #   run: |
+        #     gh pr merge ${{ steps.gh_pr_url.outputs.GH_PR_URL }}
+        #   env:
+        #     GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
+            
