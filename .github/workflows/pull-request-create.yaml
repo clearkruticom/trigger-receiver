@@ -66,6 +66,7 @@ jobs:
                       
         - name: Commit changes to branch
           run: |
+            cat actions/bbb-image-tags.auto.tfvars
             git config --global user.name "EE Actions Bot"
             git config --global user.email "james@svix.com"
             CURR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
