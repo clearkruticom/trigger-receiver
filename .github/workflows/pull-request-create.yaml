@@ -81,9 +81,9 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
 
-        # - name: Merge PR request
-        #   run: |
-        #     gh pr merge ${{ steps.gh_pr_url.outputs.GH_PR_URL }}
-        #   env:
-        #     GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
+        - name: Merge PR request
+          run: |
+            gh pr merge ${{ steps.gh_pr_url.outputs.GH_PR_URL }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
             
