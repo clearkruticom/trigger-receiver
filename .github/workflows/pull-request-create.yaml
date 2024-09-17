@@ -22,7 +22,7 @@ on:
                 required: true
                 type: string
 env:
-    BASE_BRANCH: ashay/main-copy-to-test
+    BASE_BRANCH: main
 
 jobs:
     tf_wrapper:
