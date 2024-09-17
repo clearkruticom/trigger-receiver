@@ -14,6 +14,6 @@ image_tag_e2e = "z"
 
 # Hack to make TF redeploy Helm charts that
 # havent changed in TF code
-force_svix_api_redeploy    = "4c975315-ee9a-4f6b-aa32-bed6240306e5"
-force_svix_static_redeploy = "4c975315-ee9a-4f6b-aa32-bed6240306e5"
+force_svix_api_redeploy    = "5a09e2ad-02be-4a6b-9050-371ba791fe9e"
+force_svix_static_redeploy = "5a09e2ad-02be-4a6b-9050-371ba791fe9e"
 
