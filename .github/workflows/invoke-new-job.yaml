@@ -1,0 +1,15 @@
+---
+name: Invoke "This" Job From Another Job
+on:
+    workflow_dispatch:
+
+jobs:
+    tf_do:
+        name: Run "This" For TF deploy
+        runs-on: ubuntu-latest
+        steps:
+
+        - name: Set a branch name
+          id: get_branch_name
+          run: |
+            echo "Hello World"
