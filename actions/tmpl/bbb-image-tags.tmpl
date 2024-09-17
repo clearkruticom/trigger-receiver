@@ -1,0 +1,18 @@
+# API/Worker:
+image_tag_api = "{{ .image_tag_api }}"
+
+# Frontend:
+image_tag_app = "{{ .image_tag_app }}"
+
+# Smoke tests:
+image_tag_smoketest = "{{ .image_tag_smoketest }}"
+
+# E2E tests -- they are built with each 
+# monorepo release and tagged with both latest and
+# the sha, so this should be ok to use generally: 
+image_tag_e2e = "{{ .image_tag_e2e }}"
+
+# Hack to make TF redeploy Helm charts that
+# havent changed in TF code
+force_svix_api_redeploy    = "{{ .force_redeploy_api }}"
+force_svix_static_redeploy = "{{ .force_redeploy_app }}"

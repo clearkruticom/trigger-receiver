@@ -64,15 +64,6 @@ jobs:
             rm -f actions/bbb-image-tags.auto.tfvars
             echo '${{ steps.render_template.outputs.result }}' > actions/bbb-image-tags.auto.tfvars
                       
-        - name: Copy Customer Env tfvars file if exist
-          run: |
-            echo "Copying auto.tfvars with image tags"
-            if [ -f actions/bbb-image-tags.auto.tfvars ]; then
-                cat actions/bbb-image-tags.auto.tfvars
-                cp -av actions/bbb-image-tags.auto.tfvars terraform/aws-eks/peripheral/
-                cp -av actions/bbb-image-tags.auto.tfvars terraform/az-aks/peripheral/
-            fi
-
         - name: Commit changes to branch
           run: |
             git config --global user.name "EE Actions Bot"
