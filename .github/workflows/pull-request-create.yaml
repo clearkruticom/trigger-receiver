@@ -72,6 +72,8 @@ jobs:
             cat actions/bbb-image-tags.auto.tfvars
             git config --global user.name "EE Actions Bot"
             git config --global user.email "james@svix.com"
+            cat .git/config
+            git remote -v
             CURR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
             git add .
             git commit -m 'Auto: Sets new image id tags; Reference: RunId: ${{ github.run_id }} RunNumber: ${{ github.run_number }} RunAttempt: ${{ github.run_attempt }}'
