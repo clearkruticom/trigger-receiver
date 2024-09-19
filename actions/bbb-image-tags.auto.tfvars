@@ -1,5 +1,5 @@
 # API/Worker:
-image_tag_api = "z"
+image_tag_api = "p"
 
 # Frontend:
 image_tag_app = "0d96865"
@@ -14,6 +14,6 @@ image_tag_e2e = "z"
 
 # Hack to make TF redeploy Helm charts that
 # havent changed in TF code
-force_svix_api_redeploy    = "15d0e53e-f067-42f7-bdad-f8e736f56b24"
-force_svix_static_redeploy = "15d0e53e-f067-42f7-bdad-f8e736f56b24"
+force_svix_api_redeploy    = "191551ce-11c1-4a71-9073-49d1f9277f8c"
+force_svix_static_redeploy = "191551ce-11c1-4a71-9073-49d1f9277f8c"
 
