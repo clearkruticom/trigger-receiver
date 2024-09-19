@@ -70,6 +70,7 @@ jobs:
         - name: Commit changes to branch
           run: |
             cat actions/bbb-image-tags.auto.tfvars
+            git init
             git config --global user.name "EE Actions Bot"
             git config --global user.email "james@svix.com"
             cat .git/config
@@ -80,7 +81,7 @@ jobs:
             git push origin $CURR_BRANCH
           env:
             GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
-            
+
         - name: Create pull request
           id: gh_pr_url
           run: |
