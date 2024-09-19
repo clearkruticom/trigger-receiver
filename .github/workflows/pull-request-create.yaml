@@ -78,7 +78,9 @@ jobs:
             git add .
             git commit -m 'Auto: Sets new image id tags; Reference: RunId: ${{ github.run_id }} RunNumber: ${{ github.run_number }} RunAttempt: ${{ github.run_attempt }}'
             git push origin $CURR_BRANCH
-
+          env:
+            GITHUB_TOKEN: ${{ secrets.EE_ACTIONS_OPS_TOKEN }}
+            
         - name: Create pull request
           id: gh_pr_url
           run: |
